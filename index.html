@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人學習歷程展示</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        serif: ['"Noto Serif TC"', 'serif'],
+                    },
+                    colors: {
+                        zinc: {
+                            850: '#1f1f22',
+                            950: '#09090b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 引入明體與黑體，明體作標題增加高級感，黑體作內文 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;500;700&display=swap');
+        
+        body {
+            background-color: #09090b;
+            color: #fafafa;
+        }
+
+        /* 網格卡片的毛玻璃與懸停特效 */
+        .bento-card {
+            position: relative;
+            background: rgba(39, 39, 42, 0.3);
+            border: 1px solid rgba(82, 82, 91, 0.4);
+            backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bento-card:hover {
+            background: rgba(39, 39, 42, 0.6);
+            border-color: rgba(161, 161, 170, 0.6);
+            /* transform 由 JS 接管以達到 3D 無重力傾斜效果 */
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 漸變發光背景 (已替換為 Canvas，隱藏原本的靜態背景) */
+        .glow-bg {
+            display: none;
+        }
+
+        /* 新增 Canvas 背景設定 */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 淡入動畫 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-zinc-800 selection:text-white min-h-screen flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+
+    <!-- 互動式無重力 Canvas 背景 -->
+    <canvas id="canvas-bg"></canvas>
+
+    <main class="w-full max-w-6xl animate-fade-in relative z-10">
+        
+        <!-- Header 區塊 -->
+        <header class="mb-16 mt-8">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-700 bg-zinc-800/50 text-zinc-300 text-sm tracking-widest mb-6">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                三年丙班
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-zinc-100 tracking-wide mb-4">
+                個人展示網頁
+            </h1>
+            <p class="text-zinc-400 text-lg max-w-2xl font-sans font-light leading-relaxed">
+                統整高中階段的學習軌跡。涵蓋各學科的探究紀錄、獨立開發的程式作品，以及課餘時間的文學創作。
+            </p>
+        </header>
+
+        <!-- Bento Grid 佈局 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+
+            <!-- 1. 學科表現 (置頂左側，佔據 2x2 大區塊) -->
+            <div class="bento-card rounded-3xl p-8 lg:col-span-2 lg:row-span-2 flex flex-col justify-between group">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-zinc-800 flex items-center justify-center mb-6 border border-zinc-700 group-hover:border-zinc-500 transition-colors">
+                        <i data-lucide="bar-chart-2" class="text-zinc-300 w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-2xl font-serif font-bold text-zinc-100 mb-4">專案實作：企業策略與財報分析</h2>
+                    <div class="space-y-4 text-zinc-400 font-light leading-relaxed text-sm md:text-base">
+                        <p>
+                            於大學管理學院營隊中，深入學習 <strong class="text-zinc-200 font-medium">MECE 分解分析法</strong>與<strong class="text-zinc-200 font-medium">金字塔邏輯</strong>，建立結構化解決問題的能力。同時掌握損益表、資產負債表及現金流量表等財報識讀技巧，了解如何透過毛利率、ROE 等指標評估企業營運價值。
+                        </p>
+                        <p>
+                            在最終專案中，團隊以「Netflix 併購華納兄弟案」為題進行商業個案分析。我們代入企業高層視角，結合財務數據與四大發展策略，權衡收購案的潛在損益與長效價值，展現跨領域的邏輯推演與商業洞察力。
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-zinc-800/50">
+                    <span class="text-xs text-zinc-500 tracking-widest uppercase">Business & Strategy Analysis</span>
+                </div>
+            </div>
+
+            <!-- 2. 遊戲作品：礦工傳說 -->
+            <a href="https://homosapiens-web.github.io/Miner-legend-/" target="_blank" rel="noopener noreferrer" class="bento-card rounded-3xl p-6 lg:col-span-1 lg:row-span-1 group flex flex-col justify-between h-56 lg:h-auto">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700">
+                        <i data-lucide="pickaxe" class="text-zinc-300 w-5 h-5"></i>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="text-zinc-500 w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-zinc-100 mb-1">礦工傳說</h3>
+                    <p class="text-sm text-zinc-400 font-light">Miner Legend</p>
+                </div>
+            </a>
+
+            <!-- 3. 遊戲作品：Word Arena -->
+            <a href="https://homosapiens-web.github.io/word-arena2/" target="_blank" rel="noopener noreferrer" class="bento-card rounded-3xl p-6 lg:col-span-1 lg:row-span-1 group flex flex-col justify-between h-56 lg:h-auto">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700">
+                        <i data-lucide="swords" class="text-zinc-300 w-5 h-5"></i>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="text-zinc-500 w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-zinc-100 mb-1">Word Arena</h3>
+                    <p class="text-sm text-zinc-400 font-light">競技文字遊戲</p>
+                </div>
+            </a>
+
+            <!-- 4. 遊戲作品：Wordle 無限版 -->
+            <a href="https://homosapiens-web.github.io/Infinite-wordle/" target="_blank" rel="noopener noreferrer" class="bento-card rounded-3xl p-6 lg:col-span-1 lg:row-span-1 group flex flex-col justify-between h-56 lg:h-auto">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700">
+                        <i data-lucide="spell-check" class="text-zinc-300 w-5 h-5"></i>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="text-zinc-500 w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-zinc-100 mb-1">Wordle 無限版</h3>
+                    <p class="text-sm text-zinc-400 font-light">無限制猜字挑戰</p>
+                </div>
+            </a>
+
+            <!-- 5. 遊戲作品：Pixel surviver -->
+            <a href="https://homosapiens-web.github.io/Pixel-s-6/" target="_blank" rel="noopener noreferrer" class="bento-card rounded-3xl p-6 lg:col-span-1 lg:row-span-1 group flex flex-col justify-between h-56 lg:h-auto">
+                <div class="flex justify-between items-start">
+                    <div class="p-3 rounded-xl bg-zinc-800/80 border border-zinc-700">
+                        <i data-lucide="ghost" class="text-zinc-300 w-5 h-5"></i>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="text-zinc-500 w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-zinc-100 mb-1">Pixel Surviver</h3>
+                    <p class="text-sm text-zinc-400 font-light">像素生存遊戲</p>
+                </div>
+            </a>
+
+            <!-- 6. 文學創作 (置於最底，佔據全寬) -->
+            <a href="https://www.penana.com/user/235367/%E9%99%BD%E5%A3%BD%E6%9C%A8%E9%AD%9A" target="_blank" rel="noopener noreferrer" 
+               class="bento-card rounded-3xl p-8 lg:col-span-4 group flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+                
+                <!-- 裝飾性背景光暈 -->
+                <div class="absolute right-0 top-0 w-64 h-64 bg-zinc-700/10 rounded-full blur-3xl -mr-20 -mt-20 group-hover:bg-zinc-600/20 transition-colors pointer-events-none"></div>
+
+                <div class="flex items-start md:items-center gap-6 z-10">
+                    <div class="w-14 h-14 rounded-2xl bg-zinc-800 flex items-center justify-center border border-zinc-700 shrink-0">
+                        <i data-lucide="pen-tool" class="text-zinc-300 w-7 h-7"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-1">
+                            <h2 class="text-2xl font-serif font-bold text-zinc-100">文學創作</h2>
+                            <span class="px-2 py-0.5 rounded text-[10px] uppercase tracking-wider bg-zinc-800 text-zinc-400 border border-zinc-700">Penana</span>
+                        </div>
+                        <p class="text-zinc-400 font-light">
+                            除了程式開發，我也經營小說網站。透過長篇小說創作，鍛鍊文字表達能力與世界觀建構的邏輯。
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="shrink-0 flex items-center gap-2 text-zinc-300 font-medium z-10 bg-zinc-800/50 px-5 py-3 rounded-xl border border-zinc-700 group-hover:bg-zinc-700 transition-colors">
+                    前往閱讀
+                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- 簡單頁尾 -->
+        <footer class="mt-20 text-center text-zinc-600 text-sm pb-8 font-light relative z-10">
+            © 2024 個人展示網頁. Crafted for Portfolio.
+        </footer>
+
+    </main>
+
+    <script>
+        // 初始化 Lucide 圖示
+        lucide.createIcons();
+
+        // --- 無重力背景特效 (Antigravity Canvas) ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let mouseX = null;
+        let mouseY = null;
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // 支援觸控螢幕的排斥互動
+        window.addEventListener('touchmove', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+        });
+
+        window.addEventListener('mouseout', () => {
+            mouseX = null;
+            mouseY = null;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 120 + 40; // 模糊光球大小
+                this.vx = (Math.random() - 0.5) * 0.4; // 緩慢水平漂移
+                this.vy = (Math.random() - 0.5) * 0.4 - 0.2; // 預設緩慢向上 (無重力感)
+                
+                // 科技質感的暗色調發光色彩
+                const colors = [
+                    'rgba(59, 130, 246, 0.08)', // 科技藍
+                    'rgba(139, 92, 246, 0.08)', // 質感紫
+                    'rgba(255, 255, 255, 0.03)'  // 純淨白
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // 滑鼠排斥效應 (Mouse Repulsion - 核心無重力互動)
+                if (mouseX !== null && mouseY !== null) {
+                    const dx = mouseX - this.x;
+                    const dy = mouseY - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 350; // 排斥力場範圍
+
+                    if (distance < maxDist) {
+                        const force = (maxDist - distance) / maxDist;
+                        this.x -= (dx / distance) * force * 1.5;
+                        this.y -= (dy / distance) * force * 1.5;
+                    }
+                }
+
+                // 邊界循環
+                if (this.y < -this.size) this.y = height + this.size;
+                if (this.y > height + this.size) this.y = -this.size;
+                if (this.x < -this.size) this.x = width + this.size;
+                if (this.x > width + this.size) this.x = -this.size;
+            }
+
+            draw() {
+                ctx.beginPath();
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor(window.innerWidth / 40); // 根據螢幕寬度決定光球數量
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- 卡片 3D 浮動與磁性傾斜特效 (Magnetic 3D Tilt Effect) ---
+        const cards = document.querySelectorAll('.bento-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;  
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // 計算旋轉角度 (輕微的 3D 偏轉，滑鼠在哪裡，卡片就往哪裡微傾)
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+
+                // 套用 3D 變形
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.transition = 'transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                card.style.zIndex = '10';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // 恢復原狀
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                card.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                card.style.zIndex = '1';
+            });
+        });
+    </script>
+</body>
+</html>
